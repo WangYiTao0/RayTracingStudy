@@ -10,6 +10,8 @@ vec3 color(const ray& r)
 {
 	vec3 unit_Direction = unit_vector(r.Direction());
 	float t = 0.5 * (unit_Direction.y() + 1.0);
+
+	//blended value = (1-t)*startValue + t*endValue
 	return (1.0 - t) * vec3(1.0, 1.0, 1.0) + t * vec3(0.5, 0.7, 1.0);
 }
 
