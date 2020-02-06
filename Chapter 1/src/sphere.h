@@ -6,13 +6,14 @@ class sphere : public hittable
 {
 public:
 	sphere() = default;
-	sphere(vec3 cen, float r)
-		:m_center(cen),m_radius(r){}
+	sphere(vec3 cen, float r,material*m)
+		:m_center(cen),m_radius(r),m_pMat(m){}
 	// Inherited via hittable
 	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 private:
 	vec3 m_center;
 	float m_radius;
+	material* m_pMat;
 };
 
 
@@ -39,13 +40,14 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
 	//negative (meaning no real solutions), 
 	//or zero (meaning one real solution)
 	float discriminant = b * b - a * c;
-
+	//calculate hit_record
 	if (discriminant > 0) {
 		float temp = (-b - sqrt(discriminant)) / a;
 		if (temp < t_max && temp > t_min) {
 			rec.t = temp;
 			rec.p = r.point_at_parameter(rec.t);
 			rec.normal = (rec.p - m_center) / m_radius;
+			rec.pMat = m_pMat;
 			return true;
 		}
 		temp = (-b + sqrt(discriminant)) / a;
@@ -53,6 +55,7 @@ bool sphere::hit(const ray& r, float t_min, float t_max, hit_record& rec) const
 			rec.t = temp;
 			rec.p = r.point_at_parameter(rec.t);
 			rec.normal = (rec.p - m_center) / m_radius;
+			rec.pMat = m_pMat;
 			return true;
 		}
 	}
