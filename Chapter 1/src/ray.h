@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vec3.h"
-
+// P(t) = origin + t * direction(normalize) 
 class ray
 {
 public:
