@@ -10,12 +10,24 @@
 #include "camera.h"
 #include "random.h"
 
+vec3 random_in_unit_sphere() {
+	vec3 p;
+	do {
+		p = 2.0 * vec3(random_double(), random_double(), random_double()) - vec3(1, 1, 1);
+	} while (p.squared_length() >= 1.0);
+	return p;
+}
+
+
 vec3 color(const ray& r, hittable *world)
 {
 	hit_record rec;
 	if (world->hit(r, 0.0, FLT_MAX, rec))
 	{
-		return 0.5f * vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);//in [0,1]
+		// p + n  +  randon = S
+		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
+		return 0.5f * color(ray(rec.p, target - rec.p), world);
+		//return 0.5f * vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);//in [0,1]
 	}
 	else
 	{
@@ -57,6 +69,8 @@ int main()
 			}
 			col /= float(ns);
 
+			//Add gamma
+			col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
 
 			int ir = int(255.99 * col[0]);
 			int ig = int(255.99 * col[1]);
