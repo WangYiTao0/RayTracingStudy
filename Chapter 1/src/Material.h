@@ -12,6 +12,8 @@ vec3 random_in_unit_sphere() {
 	return p;
 }
 
+	// ref_idx is the ratio of the refractive index
+	// cosine is the incident ray and the incident normal
 float schlick(float cosine, float ref_idx) {
 	float r0 = (1 - ref_idx) / (1 + ref_idx);
 	r0 = r0 * r0;

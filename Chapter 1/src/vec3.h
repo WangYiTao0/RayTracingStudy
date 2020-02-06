@@ -1,6 +1,8 @@
 #pragma once
+#define _USE_MATH_DEFINES 
 #include <iostream>
-#include <cmath>
+//#include <cmath>
+#include <math.h>
 #include <cstdlib>
 
 class vec3 {
