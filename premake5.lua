@@ -1,7 +1,7 @@
 workspace "RayTracingInOneWeek"
     architecture "x64"
     targetdir "build"
-    startproject "Sandbox"
+    startproject "Chapter 1"
 
     configurations
     {
@@ -25,5 +25,5 @@ group "Dependencies"
 group ""
 
 include "Chapter 1"
---include "Sandbox"
+include "Chapter 2"
 

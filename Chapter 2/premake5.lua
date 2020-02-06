@@ -1,5 +1,5 @@
 
-    project "Sandbox"
+    project "Chapter 2"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -21,7 +21,7 @@
 
     links
     {
-        "asEngine"
+        
     }
 
     filter "system:windows"
@@ -29,15 +29,15 @@
 
     defines
     {
-        "AS_PLATFORM_WINDOWS"
+        "_PLATFORM_WINDOWS"
     }
 
 filter "configurations:Debug"
-    defines "AS_DEBUG"
+    defines "_DEBUG"
     runtime "Debug"
     symbols "on"
 
 filter "configurations:Release"
-    defines "AS_RELEASE"
+    defines "_RELEASE"
     runtime "Release"
     optimize "on"
