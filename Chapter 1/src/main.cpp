@@ -7,6 +7,8 @@
 
 #include "hittable_list.h"
 #include "sphere.h"
+#include "camera.h"
+#include "random.h"
 
 vec3 color(const ray& r, hittable *world)
 {
@@ -31,19 +33,14 @@ int main()
 
 	int nx = 200;
 	int ny = 100;
-
-	//using right hand coordinate
-
-	vec3 lower_left_corner(-2.0, -1.0, -1.0);
-	vec3 horizontal(4.0, 0.0, 0.0);
-	vec3 vertical(0.0, 2.0, 0.0);
-	vec3 origin(0.0, 0.0, 0.0);
+	int ns = 100; //sampler 100 
 
 	hittable* list[2];
 	list[0] = new sphere(vec3(0, 0, -1), 0.5);
 	list[1] = new sphere(vec3(0, -100.5, -1), 100);
 	hittable* world = new hittable_list(list, 2);
-
+	//camera 
+	camera cam;
 	//P 
 	outputFile << "P3\n" << nx << " " << ny << "\n255\n";
 
@@ -51,12 +48,15 @@ int main()
 	{
 		for (int i = 0; i < nx; i++)
 		{
-			float u = float(i) / float(nx);
-			float v = float(j) / float(ny);
-			ray r(origin, lower_left_corner + u * horizontal + v * vertical);
-			
-			vec3 p = r.point_at_parameter(2.0);
-			vec3 col = color(r,world);
+			vec3 col(0, 0, 0);
+			for (int s = 0; s < ns; s++) {
+				float u = float(i + random_double()) / float(nx);
+				float v = float(j + random_double()) / float(ny);
+				ray r = cam.get_ray(u, v);
+				col += color(r, world);
+			}
+			col /= float(ns);
+
 
 			int ir = int(255.99 * col[0]);
 			int ig = int(255.99 * col[1]);
