@@ -22,7 +22,8 @@ vec3 random_in_unit_sphere() {
 vec3 color(const ray& r, hittable *world)
 {
 	hit_record rec;
-	if (world->hit(r, 0.0, FLT_MAX, rec))
+	// ignore hits very near zero  gets rid of the shadow acne problem. 
+	if (world->hit(r, 0.001, FLT_MAX, rec))
 	{
 		// p + n  +  randon = S
 		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
