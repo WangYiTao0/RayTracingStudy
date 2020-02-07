@@ -80,8 +80,8 @@ int main()
 	std::ofstream outputFile;
 	outputFile.open("HelloWorld.ppm", std::ios::binary | std::ios::out);
 
-	int nx = 1600;
-	int ny = 900;
+	int nx = 1200;
+	int ny = 800;
 	int ns = 10; //sampler 100 
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 	//hittable* list[5];
