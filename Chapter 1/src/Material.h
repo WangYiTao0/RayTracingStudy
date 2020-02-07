@@ -12,8 +12,8 @@ vec3 random_in_unit_sphere() {
 	return p;
 }
 
-	// ref_idx is the ratio of the refractive index
-	// cosine is the incident ray and the incident normal
+// ref_idx is the ratio of the refractive index
+// cosine is the incident ray and the incident normal
 float schlick(float cosine, float ref_idx) {
 	float r0 = (1 - ref_idx) / (1 + ref_idx);
 	r0 = r0 * r0;
@@ -52,13 +52,13 @@ public:
 
 class lambertian :public material
 {
-public :
+public:
 	lambertian(const vec3& a) :albedo(a) {}
 	virtual bool scatter(
 		const ray& r_in, const hit_record& rec, vec3& attenuation,
 		ray& scattered) const override {
 		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
-		scattered = ray(rec.p, target - rec.p);
+		scattered = ray(rec.p, target - rec.p, r_in.time());
 		attenuation = albedo;
 		return true;
 	}
@@ -70,16 +70,16 @@ class metal :public material
 {
 public:
 	//add some fuzz
-	metal(const vec3& a,float f) :albedo(a) {
+	metal(const vec3& a, float f) :albedo(a) {
 		if (f < 1)fuzz = f; else fuzz = 1;
 	}
 	virtual bool scatter(
 		const ray& r_in, const hit_record& rec, vec3& attenuation,
 		ray& scattered) const override {
 		vec3 reflected = reflect(unit_vector(r_in.Direction()), rec.normal);
-		scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere());
+		scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere(), r_in.time());
 		attenuation = albedo;
-		return (dot(scattered.Direction(),rec.normal)>0);
+		return (dot(scattered.Direction(), rec.normal) > 0);
 	}
 private:
 	vec3 albedo;
@@ -89,7 +89,7 @@ private:
 class dielectric : public material
 {
 public:
-	dielectric(float ri) : ref_idx(ri){}
+	dielectric(float ri) : ref_idx(ri) {}
 
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation,
 		ray& scattered) const override {
@@ -121,16 +121,16 @@ public:
 		{
 			reflect_prob = schlick(cosine, ref_idx);
 		}
-		else 
+		else
 		{
-		reflect_prob = 1.0;
+			reflect_prob = 1.0;
 		}
 
 		if (random_double() < reflect_prob) {
-			scattered = ray(rec.p, reflected);
+			scattered = ray(rec.p, reflected,r_in.time());
 		}
 		else {
-			scattered = ray(rec.p, refracted);
+			scattered = ray(rec.p, refracted, r_in.time());
 		}
 
 		return true;

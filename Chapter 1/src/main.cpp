@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "moving_sphere.h"
 #include "Material.h"
 
 hittable* random_scene() {
@@ -20,10 +21,14 @@ hittable* random_scene() {
 			vec3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
 			if ((center - vec3(4, 0.2, 0)).length() > 0.9) {
 				if (choose_mat < 0.8) {  // diffuse
-					list[i++] = new sphere(center, 0.2,
-						new lambertian(vec3(random_double() * random_double(),
-							random_double() * random_double(),
-							random_double() * random_double())
+					list[i++] = new moving_sphere(
+						center,
+						center + vec3(0, 0.5 * random_double(), 0),
+						0.0, 1.0, 0.2,
+						new lambertian(
+							vec3(random_double() * random_double(),
+								random_double() * random_double(),
+								random_double() * random_double())
 						)
 					);
 				}
@@ -80,8 +85,8 @@ int main()
 	std::ofstream outputFile;
 	outputFile.open("HelloWorld.ppm", std::ios::binary | std::ios::out);
 
-	int nx = 1200;
-	int ny = 800;
+	int nx = 200;
+	int ny = 100;
 	int ns = 10; //sampler 100 
 	std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 	//hittable* list[5];
@@ -96,10 +101,12 @@ int main()
 	vec3 lookfrom(13, 2, 3);
 	vec3 lookat(0, 0, 0);
 	float dist_to_focus = 10.0;
-	float aperture = 0.1;
+	float aperture = 0.0;
 
-	camera cam(lookfrom, lookat, vec3(0, 1, 0), 20, float(nx) / float(ny), aperture, dist_to_focus);
-
+	camera cam(
+		lookfrom, lookat, vec3(0, 1, 0), 20, float(nx) / float(ny), aperture,
+		dist_to_focus, 0.0, 1.0
+	);
 	outputFile << "P3\n" << nx << " " << ny << "\n255\n";
 
 	for (int j = ny - 1; j >= 0; j--)
